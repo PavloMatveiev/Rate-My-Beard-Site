@@ -1,0 +1,13 @@
+/* Limit the height of the image in the detailed post */
+.post-detail-image {
+    max-height: 600px;
+    width: 100%;
+    object-fit: contain; /* If the image is smaller than the container, it is shown completely */
+}
+
+.comment-container {
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 4px;
+}
+  

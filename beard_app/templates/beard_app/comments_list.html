@@ -1,0 +1,62 @@
+{% load static readmore star_rating pagination_tags %}
+<div id="comments">
+    {% for comment in comments %}
+      <div class="mb-3 border rounded p-2 d-flex comment-container">
+        <div class="comment-avatar me-2">
+          {% if comment.user.profile.avatar %}
+            <img src="{{ comment.user.profile.avatar.url }}" alt="Avatar" style="width:30px; height:30px; border-radius:50%;">
+          {% else %}
+            <img src="{% static 'default_avatar.jpg' %}" alt="Avatar" style="width:30px; height:30px; border-radius:50%;">
+          {% endif %}
+        </div>
+        <div class="comment-content">
+          <p><strong>{{ comment.user.username }}</strong> ({{ comment.rating|star_rating|safe }})</p>
+          <p>{{ comment.comment|read_more }}</p>
+          <p class="small text-muted">{{ comment.created_at|date:"d.m.Y H:i" }}</p>
+        </div>
+      </div>
+    {% empty %}
+      <p>No comments yet. Be the first to comment!</p>
+    {% endfor %}
+  
+    {% if comments.has_other_pages %}
+    <nav aria-label="Comment pagination">
+      <ul class="pagination justify-content-center">
+        {% if comments.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?comment_page={{ comments.previous_page_number }}{% if comment_sort %}&comment_sort={{ comment_sort }}{% endif %}">Previous</a>
+          </li>
+        {% else %}
+            <li class="page-item disabled"><span class="page-link">Previous</span></li>
+        {% endif %}
+    
+        {# Limit to 3 links #}
+        {% get_page_range comments 3 as  page_range %}
+        {% for num in  page_range %}
+          <li class="page-item {% if comments.number == num %}active{% endif %}">
+            <a class="page-link" href="?comment_page={{ num }}{% if comment_sort %}&comment_sort={{ comment_sort }}{% endif %}">{{ num }}</a>
+          </li>
+        {% endfor %}
+    
+        {# If the range does not cover all pages, add ... #}
+        {% if  page_range|last < comments.paginator.num_pages|add:"-1" %}
+          <li class="page-item">
+            <p class="page-link" data-page-param="comment_page">...</p>
+          </li>
+        {% endif %}
+        {% if comments.paginator.num_pages >  page_range|last %}
+          <li class="page-item">
+            <a class="page-link" href="?comment_page={{ comments.paginator.num_pages }}{% if comment_sort %}&comment_sort={{ comment_sort }}{% endif %}">{{ comments.paginator.num_pages }}</a>
+          </li>
+        {% endif %}
+        {% if comments.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?comment_page={{ comments.next_page_number }}{% if comment_sort %}&comment_sort={{ comment_sort }}{% endif %}">Next</a>
+          </li>
+        {% else %}
+          <li class="page-item disabled"><span class="page-link">Next</span></li>
+        {% endif %}
+      </ul>
+    </nav>
+  {% endif %}
+</div>

@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% load static star_rating %}
+
+{% block title_block %}{{ post.description }}{% endblock %}
+
+{% block css_files %}
+  <link rel="stylesheet" href="{% static "beard_app/post_detail.css" %}">
+{% endblock %}
+
+{% block body_block %}
+<div class="container mt-4">
+  <!-- Post -->
+  <div class="card mb-4">
+    <img src="{{ post.image.url }}" class="img-fluid post-detail-image" alt="Post picture">
+    <div class="card-body">
+      <h3 class="card-title">{{ post.title }}</h3>
+      <p class="card-text">{{ post.description|linebreaks }}</p>
+      <p class="text-muted">  
+        {% if post.user.profile.avatar %}
+          <img src="{{ post.user.profile.avatar.url }}" alt="Avatar" style="width:30px; height:30px; border-radius:50%; vertical-align:middle;">
+        {% else %}
+          <img src="{% static 'default_avatar.jpg' %}" alt="Avatar" style="width:30px; height:30px; border-radius:50%; vertical-align:middle;">
+        {% endif %}
+        {{ post.user.username }} | {{ post.created_at|date:"d.m.Y H:i" }}
+      </p>
+      <p class="small text-muted">Rating: {{ post.average_rating|star_rating|safe }}</p>
+    </div>
+  </div>
+
+  <!-- Comment sorting block -->
+  <div class="mb-3 d-flex align-items-center">
+    <strong class="me-2">Sort comments by:</strong>
+    <a href="?comment_sort=date_asc{% if request.GET.comment_page %}&comment_page={{ request.GET.comment_page }}{% endif %}" class="sort-comments-link btn btn-outline-secondary me-2">
+      Date <i class="fas fa-arrow-up"></i>
+    </a>
+    <a href="?comment_sort=date_desc{% if request.GET.comment_page %}&comment_page={{ request.GET.comment_page }}{% endif %}" class="sort-comments-link btn btn-outline-secondary me-2">
+      Date <i class="fas fa-arrow-down"></i>
+    </a>
+    <a href="?comment_sort=rating_asc{% if request.GET.comment_page %}&comment_page={{ request.GET.comment_page }}{% endif %}" class="sort-comments-link btn btn-outline-secondary me-2">
+      Rating <i class="fas fa-arrow-up"></i>
+    </a>
+    <a href="?comment_sort=rating_desc{% if request.GET.comment_page %}&comment_page={{ request.GET.comment_page }}{% endif %}" class="sort-comments-link btn btn-outline-secondary">
+      Rating <i class="fas fa-arrow-down"></i>
+    </a>
+  </div>
+
+
+  <!-- Wrap the comments block in a container with id="comments" -->
+  <div id="comments-container">
+    {% include 'beard_app/comments_list.html' %}
+  </div>
+
+
+
+  <!-- Comment adding form (for logged in users only) -->
+  {% if user.is_authenticated %}
+  <h5>Add a Comment</h5>
+  <form id="comment-form" method="post" action="{% url 'post_detail' post.pk %}">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="star-rating">Rate:</label>
+      <div id="star-rating" class="star-rating">
+        {% for i in "12345" %}
+          <i class="far fa-star star" data-value="{{ forloop.counter }}"></i>
+        {% endfor %}
+      </div>
+      {{ form.rating }}
+    </div>
+    
+    <div class="mb-3">
+      {{ form.comment.label_tag }}<br>
+      {{ form.comment }}
+    </div>
+    <button type="submit" class="btn btn-primary">Submit Comment</button>
+  </form>
+  {% else %}
+    <p><a href="{% url 'login' %}">Login</a> to comment.</p>
+  {% endif %}
+</div>
+{% endblock %}

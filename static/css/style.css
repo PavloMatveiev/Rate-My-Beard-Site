@@ -1,0 +1,184 @@
+/* Primary colors */
+:root {
+  --primary-color: #3498db;
+  --secondary-color: #2ecc71;
+  --bg-color: #f7f7f7;
+  --text-color: #333;
+  --link-color: #2980b9;
+}
+
+/* Common styles */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.6;
+  padding-top: 70px; /* so that content is not hidden under fixed navigation */
+}
+
+/* Fixed navigation */
+.navbar.fixed-top {
+  background-color: rgba(52, 152, 219, 0.95); /* translucent blue */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .navbar-brand {
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.navbar .nav-link {
+  font-size: 1.1rem;
+  margin-right: 15px;
+  transition: color 0.3s;
+}
+
+/* Styles for navigation buttons */
+.navbar .btn {
+  border-radius: 20px;
+  font-size: 1rem;
+  padding: 5px 15px;
+  transition: background-color 0.3s, color 0.3s;
+  border: 2px solid var(--primary-color);
+  color: var(--primary-color);
+  background-color: transparent;
+  white-space: nowrap;
+}
+
+.navbar .btn:hover {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+  color: var(--link-color);
+}
+
+/* Buttons */
+.btn {
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.btn:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Publication cards */
+.publication-card {
+  border: none;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #fff;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.publication-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+
+.card-img-top {
+  height: 200px;
+  object-fit: cover;
+}
+
+/* Text of publications */
+.truncate-title-main {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.truncate-desc-main {
+  color: #666;
+}
+
+/* Sidebars */
+.sidebar-popular a {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  background-color: #fff;
+  transition: background-color 0.3s;
+}
+
+.sidebar-popular a:hover {
+  background-color: #f0f8ff;
+}
+
+.sidebar-popular img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  margin-right: 10px;
+  border-radius: 4px;
+}
+
+/* Forms */
+form input,
+form select,
+form textarea {
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+}
+
+/* Desktop styles */
+@media (min-width: 768px) {
+  .navbar .nav-link,
+  .navbar .btn {
+    font-size: 1.1rem;
+    padding: 8px 12px;
+  }
+}
+
+/* Mobile styles */
+@media (max-width: 767px) {
+  .navbar .nav-link,
+  .navbar .btn {
+    font-size: 0.9rem;
+    padding: 6px 10px;
+  }
+  .navbar .btn {
+    margin: 4px 0;
+  }
+  .navbar .collapse {
+    text-align: center;
+  }
+  .navbar-toggler {
+    border: 1px solid var(--primary-color);
+  }
+}
+
+
+
+#back-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 50px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: none;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+#back-to-top:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 10px rgba(0,0,0,0.4);
+}

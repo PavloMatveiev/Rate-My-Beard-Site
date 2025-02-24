@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title_block %}Delete Account{% endblock %}
+
+{% block body_block %}
+  <div class="container mt-4">
+    <h2>Delete Account</h2>
+    <p>To confirm account deletion, enter your password.</p>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-danger">Delete Account</button>
+    </form>
+  </div>
+{% endblock %}

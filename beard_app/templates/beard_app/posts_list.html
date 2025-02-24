@@ -1,0 +1,76 @@
+{% load star_rating pagination_tags static %}
+<div id="posts">
+  <div class="row">
+    {% if posts %}
+      {% for post in posts %}
+        <div class="col-md-6">
+          <div class="card publication-card">
+            <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}">
+            <div class="card-body">
+              <p class="small text-muted">
+                {% if post.user.profile.avatar %}
+                  <img src="{{ post.user.profile.avatar.url }}" alt="Avatar" style="width:20px; height:20px; border-radius:50%; vertical-align:middle;">
+                {% else %}
+                  <img src="{% static 'default_avatar.jpg' %}" alt="Avatar" style="width:20px; height:20px; border-radius:50%; vertical-align:middle;">
+                {% endif %}
+                {{ post.user.username }} {{ post.created_at|date:"d.m.Y" }}
+              </p>
+              <h5 class="card-title truncate-title-main">{{ post.title }}</h5>
+              <p class="card-text truncate-desc-main">{{ post.description|truncatewords:20 }}</p>
+              <p class="small text-muted">
+                Rating: {{ post.average_rating|star_rating|safe }} | Comments: {{ post.comment_count }}
+              </p>
+              <a href="{% url 'post_detail' post.pk %}" class="btn btn-primary">View Post</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>There are no posts yet.</p>
+    {% endif %}
+  </div>
+
+  <!-- Pagination -->
+  {% if posts.has_other_pages %}
+    <nav aria-label="Page navigation">
+      <ul class="pagination justify-content-center mt-4">
+        {% if posts.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ posts.previous_page_number }}{% if sort %}&sort={{ sort }}{% endif %}">Previous</a>
+          </li>
+        {% else %}
+          <li class="page-item disabled"><span class="page-link">Previous</span></li>
+        {% endif %}
+
+        {# Limit to 3 links #}
+        {% get_page_range posts 3 as  page_range %}
+        {% for num in  page_range %}
+          <li class="page-item {% if posts.number == num %}active{% endif %}">
+            <a class="page-link" href="?page={{ num }}{% if sort %}&sort={{ sort }}{% endif %}">{{ num }}</a>
+          </li>
+        {% endfor %}
+
+        {# If the range does not cover all pages, add ... #}
+        {% if  page_range|last < posts.paginator.num_pages|add:"-1" %}
+        <li class="page-item">
+          <p class="page-link">...</p>
+        </li>
+      {% endif %}
+      {% if posts.paginator.num_pages >  page_range|last %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ posts.paginator.num_pages }}{% if sort %}&sort={{ sort }}{% endif %}">{{ posts.paginator.num_pages }}</a>
+        </li>
+      {% endif %}
+      
+
+        {% if posts.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ posts.next_page_number }}{% if sort %}&sort={{ sort }}{% endif %}">Next</a>
+          </li>
+        {% else %}
+          <li class="page-item disabled"><span class="page-link">Next</span></li>
+        {% endif %}
+      </ul>
+    </nav>
+  {% endif %}
+</div>
